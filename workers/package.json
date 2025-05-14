@@ -1,0 +1,9 @@
+{
+  "name": "photo-workers",
+  "version": "1.0.0",
+  "main": "resize.js",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "sharp": "^0.32.5"
+  }
+}

@@ -1,0 +1,48 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+
+  app:
+    build: ./app
+    ports:
+      - "5000:3000"
+    volumes:
+      - ./app/upload/uploads:/app/upload/uploads
+    depends_on:
+      - rabbitmq
+
+  dimension:
+    build: ./workers
+    command: ["node", "dimension.js"]
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app/upload/uploads:/app/upload/uploads
+
+  marcaagua:
+    build: ./workers
+    command: ["node", "marcaagua.js"]
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app/upload/uploads:/app/upload/uploads
+
+  detect:
+    build: ./workers
+    command: ["node", "detect.js"]
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app/upload/uploads:/app/upload/uploads
+
+  notificacion:
+    build: ./workers
+    command: ["node", "notificacion.js"]
+    depends_on:
+      - rabbitmq
